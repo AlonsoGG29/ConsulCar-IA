@@ -1,6 +1,6 @@
 # Guía para crear el archivo .exe (Ejecutable único)
 
-Para que tu padre pueda usar la aplicación simplemente haciendo doble clic, vamos a empaquetar todo el proyecto usando **PyInstaller**. 
+Para que cualquier usuario sin conocimientos técnicos pueda usar la aplicación simplemente haciendo doble clic, vamos a empaquetar todo el proyecto usando **PyInstaller**. 
 
 Esto crea un único archivo `.exe` que contiene Python, la aplicación y todas sus dependencias.
 
@@ -28,7 +28,7 @@ pyinstaller --name "ComparadorCoches" --onefile --noconsole --add-data "template
 ### Explicación de los parámetros:
 - `--name "ComparadorCoches"`: Le da nombre al archivo `.exe` final.
 - `--onefile`: Empaqueta todo en un único archivo (más limpio para compartir).
-- `--noconsole`: Evita que se abra una horrible ventana negra de MS-DOS por detrás. La aplicación se ejecutará silenciosamente en segundo plano (abriendo el navegador de forma automática).
+- `--noconsole`: Evita que se abra una ventana negra de línea de comandos por detrás. La aplicación se ejecutará silenciosamente en segundo plano (abriendo el navegador de forma automática).
 - `--add-data "templates;templates"`: Le dice a PyInstaller que debe incluir la carpeta `templates` (donde está tu `index.html`) dentro del `.exe`. *(Nota: en Windows se usa el separador `;`, en Mac/Linux sería `:`)*.
 
 ## Paso 3: Encontrar y probar el `.exe`
@@ -42,4 +42,4 @@ Una vez que el comando termine (tardará un minuto o dos):
 
 ## Paso 4: Entregar
 
-Ya puedes coger el archivo `ComparadorCoches.exe` (puedes sacarlo de la carpeta `dist`) y ponérselo en el Escritorio a tu padre o enviárselo. Solo necesita ese archivo, nada más. ¡A disfrutar comparando coches!
+Ya puedes coger el archivo `ComparadorCoches.exe` (puedes sacarlo de la carpeta `dist`) y colocarlo en el Escritorio o enviárselo a quien vaya a usar la aplicación. Solo necesita ese archivo, sin tener que instalar nada más. ¡A disfrutar comparando coches!
