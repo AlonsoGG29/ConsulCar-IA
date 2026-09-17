@@ -18,7 +18,7 @@ const Filters = ({ filters, setFilters }) => {
         <input 
           type="range" 
           name="potencia_min" 
-          min="50" max="600" step="10"
+          min="10" max="600" step="10"
           value={filters.potencia_min || 0} 
           onChange={handleChange}
           className="slider"
