@@ -8,7 +8,9 @@ const CarCard = ({ car }) => {
     maximumFractionDigits: 0
   }).format(car.precio_base);
 
-  const imageUrl = car.fuentes_modelo?.[0]?.url_imagen || 'https://via.placeholder.com/300x200?text=Coche+Sin+Imagen';
+  const imageUrl = Array.isArray(car.fuentes_modelo) 
+    ? car.fuentes_modelo[0]?.url_imagen 
+    : car.fuentes_modelo?.url_imagen || 'https://via.placeholder.com/300x200?text=Coche+Sin+Imagen';
 
   return (
     <div className="car-card">

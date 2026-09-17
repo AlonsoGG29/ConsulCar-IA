@@ -58,12 +58,35 @@ El proyecto está dividido en dos partes principales:
 
 ---
 
-## Uso de la aplicación
+## 🚀 Guía de Uso de la Aplicación
 
-Una vez tengas ambos servidores corriendo simultáneamente:
-1. Dirígete a `http://localhost:5173` en tu navegador.
-2. Verás el catálogo de coches cargado en un orden dinámico (aleatorio).
-3. Utiliza la barra lateral para ajustar los filtros interactivos en tiempo real:
-   - Búsqueda por texto (modelo).
-   - Controles deslizantes (sliders) para: Potencia (CV), Consumo, Largo y Maletero.
-   - Selector de tipo de combustible.
+Una vez tengas ambos servidores (Frontend y Backend) corriendo simultáneamente, dirígete a `http://localhost:5173` en tu navegador para empezar a usar la aplicación.
+
+### 🎯 ¿Qué puedes hacer con el Comparador?
+
+El Consultor de Coches está diseñado para ayudarte a encontrar tu coche ideal filtrando directamente por tus **necesidades reales** en lugar de solo por marca o modelo. 
+
+Aquí tienes un resumen de sus funcionalidades principales:
+
+#### 1. Búsqueda Directa
+> **🔍 Búsqueda por modelo**
+> Si tienes en mente un coche específico, utiliza la barra de búsqueda superior en el panel izquierdo. Escribe el nombre del modelo (ej. *Ibiza*, *Tucson*, *Corolla*) y el catálogo se actualizará instantáneamente.
+
+#### 2. Filtros Dinámicos e Interactivos
+Puedes combinar múltiples filtros a la vez. El catálogo a la derecha se actualizará **en tiempo real** conforme vayas moviendo los deslizadores:
+
+- **⚡ Potencia Mínima (CV):** Ajusta si buscas un coche estándar para ciudad (ej. > 80 CV) o un vehículo con gran aceleración y deportividad (ej. > 200 CV).
+- **⛽ Consumo Máximo (L/100km):** Limita el consumo de combustible para asegurar que el coche sea eficiente y económico en el día a día.
+- **🔋 Tipo de Combustible:** Filtra entre opciones como *Gasolina*, *Diésel*, *Eléctrico*, *Híbrido (HEV, PHEV, MHEV)* dependiendo de si cuentas con cargador en casa o sueles hacer viajes muy largos.
+- **📏 Largo Máximo (mm):** ¿Tienes una plaza de garaje pequeña? Utiliza este filtro para asegurarte de que el coche cabe en tu plaza de aparcamiento (ej. < 4300 mm para coches compactos).
+- **🧳 Maletero Mínimo (L):** Ideal para familias o si viajas a menudo. Filtra coches que tengan un gran volumen de carga (ej. > 450 L).
+
+#### 3. Catálogo y Visualización de Datos
+Cada tarjeta de coche te ofrece la información clave de un solo vistazo:
+* **Fotografía del vehículo** (siempre que la fuente esté disponible).
+* **Precio base** orientativo en euros.
+* **Características principales:** Potencia, Combustible, Consumo medio y tamaño del maletero.
+* **Dimensiones exactas:** Largo, ancho y alto en milímetros, clave para garajes.
+
+> [!TIP]
+> **Consejo pro:** Prueba a buscar el coche "perfecto" para un viaje combinando *Maletero > 500L*, *Consumo < 6 L/100km* y *Combustible: Diésel o HEV*. ¡La interfaz te mostrará solo los mejores candidatos!
