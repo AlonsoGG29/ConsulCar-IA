@@ -1,45 +1,69 @@
-# Guía para crear el archivo .exe (Ejecutable único)
+# Comparador de Coches
 
-Para que cualquier usuario sin conocimientos técnicos pueda usar la aplicación simplemente haciendo doble clic, vamos a empaquetar todo el proyecto usando **PyInstaller**. 
+Una aplicación web moderna para buscar y comparar coches en base a múltiples criterios (potencia, consumo, dimensiones, maletero, etc.).
 
-Esto crea un único archivo `.exe` que contiene Python, la aplicación y todas sus dependencias.
+El proyecto está dividido en dos partes principales:
+- **Backend:** Desarrollado en Python con **FastAPI** y conectado a una base de datos en **Supabase**.
+- **Frontend:** Desarrollado en **React** (utilizando Vite) con un diseño moderno, responsivo y centrado en la usabilidad.
 
-> [!WARNING]
-> **Antes de empezar:**
-> Asegúrate de haber editado el archivo `main.py` y haber reemplazado `TU_SUPABASE_URL_AQUI` y `TU_SUPABASE_KEY_AQUI` por las credenciales reales de tu base de datos de Supabase.
+---
 
-## Paso 1: Instalar PyInstaller
+## Requisitos Previos
 
-Abre una terminal (PowerShell o CMD) en la carpeta donde tienes el proyecto (`d:\CLASE\TAJAMAR\Coches`) e instala PyInstaller junto con las demás dependencias:
+- Tener instalado [Python 3.8+](https://www.python.org/downloads/).
+- Tener instalado [Node.js y npm](https://nodejs.org/).
+- Una base de datos en [Supabase](https://supabase.com/) configurada con el esquema de datos del proyecto (puedes usar el script `coches.sql` incluido).
 
-```bash
-pip install -r requirements.txt
-pip install pyinstaller
-```
+---
 
-## Paso 2: Crear el ejecutable
+## 1. Configuración del Backend (API de Python)
 
-En la misma terminal, ejecuta el siguiente comando:
+1. **Instalar dependencias:**
+   Abre una terminal en la carpeta principal del proyecto y ejecuta:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-```bash
-pyinstaller --name "ComparadorCoches" --onefile --noconsole --add-data "templates;templates" main.py
-```
+2. **Configurar credenciales de Base de Datos:**
+   Abre el archivo llamado `.env` en la raíz del proyecto (o créalo si no existe) y añade tus credenciales de Supabase:
+   ```env
+   SUPABASE_URL=tu_url_aqui
+   SUPABASE_KEY=tu_key_aqui
+   ```
 
-### Explicación de los parámetros:
-- `--name "ComparadorCoches"`: Le da nombre al archivo `.exe` final.
-- `--onefile`: Empaqueta todo en un único archivo (más limpio para compartir).
-- `--noconsole`: Evita que se abra una ventana negra de línea de comandos por detrás. La aplicación se ejecutará silenciosamente en segundo plano (abriendo el navegador de forma automática).
-- `--add-data "templates;templates"`: Le dice a PyInstaller que debe incluir la carpeta `templates` (donde está tu `index.html`) dentro del `.exe`. *(Nota: en Windows se usa el separador `;`, en Mac/Linux sería `:`)*.
+3. **Ejecutar el servidor:**
+   En la misma terminal, inicia la API de FastAPI ejecutando:
+   ```bash
+   python main.py
+   ```
+   *El backend de datos estará disponible en `http://localhost:8000` y su documentación interactiva en `http://localhost:8000/docs`.*
 
-## Paso 3: Encontrar y probar el `.exe`
+---
 
-Una vez que el comando termine (tardará un minuto o dos):
+## 2. Configuración del Frontend (React)
 
-1. Verás que se han creado un par de carpetas nuevas: `build` y `dist`.
-2. Entra en la carpeta **`dist`**.
-3. ¡Ahí está tu **`ComparadorCoches.exe`**!
-4. Haz doble clic en él. Tardará unos segundos en descomprimirse en segundo plano la primera vez, y luego abrirá automáticamente tu navegador web con la aplicación funcionando.
+1. **Instalar dependencias de Node:**
+   Abre **una segunda terminal**, entra en la carpeta `frontend` e instala los paquetes necesarios:
+   ```bash
+   cd frontend
+   npm install
+   ```
 
-## Paso 4: Entregar
+2. **Ejecutar la interfaz web:**
+   Inicia el servidor de desarrollo de Vite:
+   ```bash
+   npm run dev
+   ```
+   *La web estará disponible en `http://localhost:5173`. Ábrelo en tu navegador web.*
 
-Ya puedes coger el archivo `ComparadorCoches.exe` (puedes sacarlo de la carpeta `dist`) y colocarlo en el Escritorio o enviárselo a quien vaya a usar la aplicación. Solo necesita ese archivo, sin tener que instalar nada más. ¡A disfrutar comparando coches!
+---
+
+## Uso de la aplicación
+
+Una vez tengas ambos servidores corriendo simultáneamente:
+1. Dirígete a `http://localhost:5173` en tu navegador.
+2. Verás el catálogo de coches cargado en un orden dinámico (aleatorio).
+3. Utiliza la barra lateral para ajustar los filtros interactivos en tiempo real:
+   - Búsqueda por texto (modelo).
+   - Controles deslizantes (sliders) para: Potencia (CV), Consumo, Largo y Maletero.
+   - Selector de tipo de combustible.

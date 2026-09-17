@@ -1,0 +1,237 @@
+:root {
+  --primary-color: #3b82f6;
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent: #10b981;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: -webkit-linear-gradient(45deg, var(--primary-color), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+/* Layout */
+.main-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+  .sidebar {
+    position: static !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.sidebar {
+  flex: 0 0 300px;
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 2rem;
+}
+
+.grid-container {
+  flex: 1;
+}
+
+/* UI Elements */
+input, select, .slider {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  box-sizing: border-box;
+}
+
+input[type="range"] {
+  padding: 0;
+  height: 6px;
+  -webkit-appearance: none;
+  background: #334155;
+  outline: none;
+  border: none;
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+}
+
+input:focus, select:focus {
+  outline: 2px solid var(--primary-color);
+  border-color: transparent;
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.25rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.filter-value {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.search-bar {
+  margin-bottom: 1.5rem;
+}
+
+/* Card */
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.car-card {
+  background: var(--card-bg);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #334155;
+}
+
+.car-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  border-color: var(--primary-color);
+}
+
+.car-image-container {
+  width: 100%;
+  height: 200px;
+  background: #0f172a;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.car-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.car-card:hover .car-image {
+  transform: scale(1.05);
+}
+
+.car-info {
+  padding: 1.5rem;
+}
+
+.car-brand {
+  color: var(--primary-color);
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.car-model {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0.25rem 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.car-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.car-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background: #0f172a;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+}
+.spec-item span:first-child {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 0.1rem;
+}
+.spec-item span:last-child {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 3rem;
+  color: var(--primary-color);
+  grid-column: 1 / -1;
+}
+
+.no-results {
+  text-align: center;
+  font-size: 1.25rem;
+  padding: 3rem;
+  color: var(--text-muted);
+  background: var(--card-bg);
+  border-radius: 1rem;
+  border: 1px dashed #334155;
+  grid-column: 1 / -1;
+}
