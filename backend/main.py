@@ -45,15 +45,10 @@ app.add_middleware(
 # Servir carpeta templates estáticamente (si tuvieras más archivos)
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.get("/", response_class=HTMLResponse)
+# La ruta raíz ya no sirve el HTML, ahora lo hace el frontend en React.
+@app.get("/")
 async def serve_index():
-    """Sirve la Single Page Application."""
-    # Leemos el archivo index.html
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    index_path = os.path.join(base_dir, "templates", "index.html")
-    with open(index_path, "r", encoding="utf-8") as f:
-        html_content = f.read()
-    return HTMLResponse(content=html_content)
+    return {"mensaje": "API de Comparador de Coches funcionando. El frontend corre en el puerto 5173."}
 
 @app.get("/api/marcas")
 async def get_marcas():
