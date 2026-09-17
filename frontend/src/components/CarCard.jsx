@@ -39,6 +39,10 @@ const CarCard = ({ car }) => {
             <span>Maletero</span>
             <span>{car.maletero_litros ? `${car.maletero_litros} L` : 'N/A'}</span>
           </div>
+          <div className="spec-item">
+            <span>Autonomía</span>
+            <span>{car.autonomia_km ? `${car.autonomia_km} km` : 'N/A'}</span>
+          </div>
           <div className="spec-item" style={{ gridColumn: '1 / -1' }}>
             <span>Medidas (LxAxA)</span>
             <span>

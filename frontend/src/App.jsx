@@ -11,7 +11,8 @@ function App() {
   const [filters, setFilters] = useState({
     potencia_min: '',
     consumo_max: '',
-    combustible: '',
+    combustible: [],
+    autonomia_min: '',
     largo_max: '',
     maletero_min: ''
   });
@@ -23,7 +24,9 @@ function App() {
       if (search) queryParams.append('busqueda', search);
       
       Object.entries(filters).forEach(([key, value]) => {
-        if (value) {
+        if (Array.isArray(value)) {
+          value.forEach(v => queryParams.append(key, v));
+        } else if (value) {
           queryParams.append(key, value);
         }
       });

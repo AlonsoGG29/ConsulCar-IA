@@ -77,7 +77,8 @@ Puedes combinar múltiples filtros a la vez. El catálogo a la derecha se actual
 
 - **⚡ Potencia Mínima (CV):** Ajusta si buscas un coche estándar para ciudad (ej. > 80 CV) o un vehículo con gran aceleración y deportividad (ej. > 200 CV).
 - **⛽ Consumo Máximo (L/100km):** Limita el consumo de combustible para asegurar que el coche sea eficiente y económico en el día a día.
-- **🔋 Tipo de Combustible:** Filtra entre opciones como *Gasolina*, *Diésel*, *Eléctrico*, *Híbrido (HEV, PHEV, MHEV)* dependiendo de si cuentas con cargador en casa o sueles hacer viajes muy largos.
+- **🔋 Tipo de Combustible:** Filtra entre múltiples opciones como *Gasolina*, *Diésel*, *GLP*, *Hidrógeno*, *Eléctrico*, o híbridos (*MHEV, HEV, PHEV*). Puedes seleccionar **varios a la vez** marcando sus casillas según tus necesidades.
+- **🔋 Autonomía Mínima (km):** Asegúrate de tener alcance suficiente antes de tener que repostar o recargar, ideal para vehículos eléctricos y viajes largos.
 - **📏 Largo Máximo (mm):** ¿Tienes una plaza de garaje pequeña? Utiliza este filtro para asegurarte de que el coche cabe en tu plaza de aparcamiento (ej. < 4300 mm para coches compactos).
 - **🧳 Maletero Mínimo (L):** Ideal para familias o si viajas a menudo. Filtra coches que tengan un gran volumen de carga (ej. > 450 L).
 

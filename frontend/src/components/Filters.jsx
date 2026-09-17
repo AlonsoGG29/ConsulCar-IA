@@ -33,7 +33,7 @@ const Filters = ({ filters, setFilters }) => {
         <input 
           type="range" 
           name="consumo_max" 
-          min="0" max="15" step="0.5"
+          min="0" max="15" step="0.1"
           value={filters.consumo_max || 15} 
           onChange={handleChange}
           className="slider"
@@ -42,14 +42,45 @@ const Filters = ({ filters, setFilters }) => {
 
       <div>
         <label>Tipo Combustible</label>
-        <select name="combustible" value={filters.combustible} onChange={handleChange}>
-          <option value="">Cualquiera</option>
-          <option value="Gasolina">Gasolina</option>
-          <option value="Diésel">Diésel</option>
-          <option value="Híbrido">Híbrido</option>
-          <option value="PHEV">PHEV (Enchufable)</option>
-          <option value="Eléctrico">Eléctrico</option>
-        </select>
+        <div className="checkbox-group">
+          {['Gasolina', 'Diésel', 'GLP', 'Hidrógeno', 'MHEV', 'HEV', 'PHEV', 'Eléctrico'].map(tipo => (
+            <label key={tipo} className="checkbox-label">
+              <input 
+                type="checkbox" 
+                name="combustible"
+                value={tipo}
+                checked={filters.combustible.includes(tipo)}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setFilters(prev => {
+                    const currentCombustibles = Array.isArray(prev.combustible) ? prev.combustible : [];
+                    if (checked) {
+                      return { ...prev, combustible: [...currentCombustibles, tipo] };
+                    } else {
+                      return { ...prev, combustible: currentCombustibles.filter(c => c !== tipo) };
+                    }
+                  });
+                }}
+              />
+              {tipo === 'MHEV' ? 'Mild-Hybrid (MHEV)' : tipo === 'HEV' ? 'Híbrido (HEV)' : tipo === 'PHEV' ? 'Híbrido Enchufable (PHEV)' : tipo}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label>
+          <span>Autonomía Mínima:</span>
+          <span className="filter-value">{filters.autonomia_min || 0} km</span>
+        </label>
+        <input 
+          type="range" 
+          name="autonomia_min" 
+          min="0" max="1500" step="50"
+          value={filters.autonomia_min || 0} 
+          onChange={handleChange}
+          className="slider"
+        />
       </div>
 
       <div>

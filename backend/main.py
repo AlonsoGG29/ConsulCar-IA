@@ -62,13 +62,14 @@ async def get_marcas():
 @app.get("/api/coches")
 async def get_coches(
     marca: Optional[int] = None,
-    combustible: Optional[str] = None,
+    combustible: Optional[List[str]] = Query(default=None),
     carroceria: Optional[str] = None,
     precio_max: Optional[float] = None,
     maletero_min: Optional[int] = None,
     potencia_min: Optional[int] = None,
     consumo_max: Optional[float] = None,
     largo_max: Optional[int] = None,
+    autonomia_min: Optional[int] = None,
     busqueda: Optional[str] = None
 ):
     """Devuelve los coches aplicando los filtros proporcionados."""
@@ -83,9 +84,11 @@ async def get_coches(
         query = query.eq("id_marca", marca)
         
     if combustible:
-        # En la BD tenemos valores como "Gasolina", "Diésel", "HEV", "PHEV", "Eléctrico", etc.
-        # Usamos ilike para búsquedas más flexibles si es necesario, o eq si es exacto
-        query = query.ilike("combustible", f"%{combustible}%")
+        # 'combustible' es ahora una lista de strings
+        query = query.in_("combustible", combustible)
+        
+    if autonomia_min is not None:
+        query = query.gte("autonomia_km", autonomia_min)
         
     if carroceria:
         query = query.eq("carroceria", carroceria)
