@@ -33,7 +33,7 @@ const CarCard = ({ car }) => {
           </div>
           <div className="spec-item">
             <span>Consumo</span>
-            <span>{car.consumo ? `${car.consumo} L/100km` : 'N/A'}</span>
+            <span>{car.consumo ? `${car.consumo} ${car.combustible === 'Eléctrico' ? 'kWh' : (car.combustible === 'GLP' || car.combustible === 'Hidrógeno' ? 'Kg' : 'L')}/100km` : 'N/A'}</span>
           </div>
           <div className="spec-item">
             <span>Maletero</span>
