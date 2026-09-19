@@ -4,9 +4,10 @@ import CarCard from './components/CarCard';
 import Filters from './components/Filters';
 
 function App() {
-  const [cars, setCars] = useState([]);
+  const [cars, setCars]       = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch]   = useState('');
+  const [marcasList, setMarcasList] = useState([]); // lista completa de marcas para el filtro
 
   const [filters, setFilters] = useState({
     potencia_min: '',
@@ -15,7 +16,22 @@ function App() {
     autonomia_min: '',
     largo_max: '',
     maletero_min: '',
+    precio_min: '',
+    precio_max: '',
+    marca: [],         // ids de marca seleccionados
   });
+
+  // Carga la lista de marcas una sola vez al iniciar
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/marcas')
+      .then(r => r.json())
+      .then(data => {
+        // Ordenar alfabéticamente por nombre
+        const sorted = [...data].sort((a, b) => a.nombre.localeCompare(b.nombre));
+        setMarcasList(sorted);
+      })
+      .catch(console.error);
+  }, []);
 
   const fetchCars = async () => {
     setLoading(true);
@@ -26,7 +42,7 @@ function App() {
       Object.entries(filters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
           value.forEach(v => queryParams.append(key, v));
-        } else if (value) {
+        } else if (value !== '' && value !== null && value !== undefined) {
           queryParams.append(key, value);
         }
       });
@@ -77,7 +93,7 @@ function App() {
       {/* ── LAYOUT ── */}
       <div className="main-layout">
         <aside className="sidebar">
-          <Filters filters={filters} setFilters={setFilters} />
+          <Filters filters={filters} setFilters={setFilters} marcasList={marcasList} />
         </aside>
 
         <section className="content-area">

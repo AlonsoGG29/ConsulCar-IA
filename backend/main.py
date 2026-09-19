@@ -61,9 +61,10 @@ async def get_marcas():
 
 @app.get("/api/coches")
 async def get_coches(
-    marca: Optional[int] = None,
+    marca: Optional[List[int]] = Query(default=None),
     combustible: Optional[List[str]] = Query(default=None),
     carroceria: Optional[str] = None,
+    precio_min: Optional[float] = None,
     precio_max: Optional[float] = None,
     maletero_min: Optional[int] = None,
     potencia_min: Optional[int] = None,
@@ -80,8 +81,9 @@ async def get_coches(
     query = supabase.table("modelos").select("*, marcas(*), fuentes_modelo(*)")
     
     # Aplicamos los filtros condicionalmente
-    if marca is not None:
-        query = query.eq("id_marca", marca)
+    if marca:
+        # Lista de ids de marca seleccionados
+        query = query.in_("id_marca", marca)
         
     if combustible:
         # 'combustible' es ahora una lista de strings
@@ -92,6 +94,9 @@ async def get_coches(
         
     if carroceria:
         query = query.eq("carroceria", carroceria)
+
+    if precio_min is not None:
+        query = query.gte("precio_base", precio_min)
         
     if precio_max is not None:
         query = query.lte("precio_base", precio_max)

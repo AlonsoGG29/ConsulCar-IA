@@ -300,6 +300,84 @@ input[type="range"]::-webkit-slider-thumb:hover {
   color: var(--text-main);
 }
 
+/* ── Dual price range slider ─────────────── */
+.price-range-track {
+  position: relative;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0.6rem 0 0.25rem;
+}
+
+.price-range-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--accent);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.price-slider {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  -webkit-appearance: none;
+  pointer-events: none;
+}
+
+.price-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 3px solid var(--bg-surface);
+  box-shadow: 0 0 8px var(--accent-glow);
+  pointer-events: all;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.price-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 16px var(--accent-glow);
+  transform: scale(1.15);
+}
+
+/* ── Brand search input ──────────────────── */
+.brand-search-input {
+  width: 100%;
+  padding: 0.4rem 0.7rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  margin-bottom: 0.65rem;
+  margin-top: 0.5rem;
+  transition: border-color var(--transition);
+  box-sizing: border-box;
+}
+
+.brand-search-input:focus {
+  outline: none;
+  border-color: rgba(239,68,68,0.5);
+}
+
+.brand-search-input::placeholder { color: var(--text-dim); }
+
+.brand-pills { max-height: 160px; overflow-y: auto; padding-right: 2px; }
+.brand-pills::-webkit-scrollbar { width: 3px; }
+.brand-pills::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.brand-pills::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
 /* ============================
    CONTENT AREA
    ============================ */
