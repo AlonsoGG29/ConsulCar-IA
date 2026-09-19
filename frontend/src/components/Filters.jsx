@@ -1,117 +1,94 @@
 import React from 'react';
 
+const FUEL_LABELS = {
+  'Gasolina':  'Gasolina',
+  'Diésel':    'Diésel',
+  'GLP':       'GLP',
+  'Hidrógeno': 'H₂',
+  'MHEV':      'Mild-Hybrid',
+  'HEV':       'Híbrido',
+  'PHEV':      'Enchufable',
+  'Eléctrico': 'Eléctrico',
+};
+
 const Filters = ({ filters, setFilters }) => {
-  const handleChange = (e) => {
+  const handleRange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({ ...prev, [name]: value }));
   };
 
+  const toggleFuel = (tipo) => {
+    setFilters(prev => {
+      const current = Array.isArray(prev.combustible) ? prev.combustible : [];
+      return {
+        ...prev,
+        combustible: current.includes(tipo)
+          ? current.filter(c => c !== tipo)
+          : [...current, tipo],
+      };
+    });
+  };
+
+  const SliderBlock = ({ label, name, min, max, step, unit, defaultVal }) => {
+    const val = filters[name] || defaultVal;
+    return (
+      <div className="filter-block">
+        <div className="filter-label-row">
+          <span className="filter-label-text">{label}</span>
+          <span className="filter-label-value">{val} {unit}</span>
+        </div>
+        <input
+          type="range"
+          name={name}
+          min={min}
+          max={max}
+          step={step}
+          value={val}
+          onChange={handleRange}
+        />
+      </div>
+    );
+  };
+
   return (
-    <div className="filters">
-      <h2>Filtros</h2>
-      
-      <div>
-        <label>
-          <span>Potencia Mínima:</span>
-          <span className="filter-value">{filters.potencia_min || 0} CV</span>
-        </label>
-        <input 
-          type="range" 
-          name="potencia_min" 
-          min="10" max="600" step="10"
-          value={filters.potencia_min || 0} 
-          onChange={handleChange}
-          className="slider"
-        />
-      </div>
+    <div>
+      <p className="filters-title">Filtros</p>
 
-      <div>
-        <label>
-          <span>Consumo Máximo:</span>
-          <span className="filter-value">{filters.consumo_max || 15} L/100km</span>
-        </label>
-        <input 
-          type="range" 
-          name="consumo_max" 
-          min="0" max="15" step="0.1"
-          value={filters.consumo_max || 15} 
-          onChange={handleChange}
-          className="slider"
-        />
-      </div>
+      <SliderBlock label="Potencia mínima" name="potencia_min" min={10}   max={600}  step={10}   unit="CV"       defaultVal={0} />
+      <SliderBlock label="Consumo máximo"  name="consumo_max"  min={0}    max={25}   step={0.1}  unit="/ 100km"  defaultVal={25} />
 
-      <div>
-        <label>Tipo Combustible</label>
-        <div className="checkbox-group">
-          {['Gasolina', 'Diésel', 'GLP', 'Hidrógeno', 'MHEV', 'HEV', 'PHEV', 'Eléctrico'].map(tipo => (
-            <label key={tipo} className="checkbox-label">
-              <input 
-                type="checkbox" 
-                name="combustible"
-                value={tipo}
-                checked={filters.combustible.includes(tipo)}
-                onChange={(e) => {
-                  const checked = e.target.checked;
-                  setFilters(prev => {
-                    const currentCombustibles = Array.isArray(prev.combustible) ? prev.combustible : [];
-                    if (checked) {
-                      return { ...prev, combustible: [...currentCombustibles, tipo] };
-                    } else {
-                      return { ...prev, combustible: currentCombustibles.filter(c => c !== tipo) };
-                    }
-                  });
-                }}
+      <hr className="filter-divider" />
+
+      <div className="filter-block">
+        <div className="filter-label-row">
+          <span className="filter-label-text">Combustible</span>
+          {filters.combustible.length > 0 && (
+            <span className="filter-label-value">{filters.combustible.length} sel.</span>
+          )}
+        </div>
+        <div className="fuel-pills">
+          {Object.entries(FUEL_LABELS).map(([valor, etiqueta]) => (
+            <span key={valor} className="fuel-pill">
+              <input
+                type="checkbox"
+                id={`fuel-${valor}`}
+                checked={filters.combustible.includes(valor)}
+                onChange={() => toggleFuel(valor)}
               />
-              {tipo === 'MHEV' ? 'Mild-Hybrid (MHEV)' : tipo === 'HEV' ? 'Híbrido (HEV)' : tipo === 'PHEV' ? 'Híbrido Enchufable (PHEV)' : tipo}
-            </label>
+              <label htmlFor={`fuel-${valor}`}>{etiqueta}</label>
+            </span>
           ))}
         </div>
       </div>
 
-      <div>
-        <label>
-          <span>Autonomía Mínima:</span>
-          <span className="filter-value">{filters.autonomia_min || 0} km</span>
-        </label>
-        <input 
-          type="range" 
-          name="autonomia_min" 
-          min="0" max="1500" step="50"
-          value={filters.autonomia_min || 0} 
-          onChange={handleChange}
-          className="slider"
-        />
-      </div>
+      <hr className="filter-divider" />
 
-      <div>
-        <label>
-          <span>Largo Máximo:</span>
-          <span className="filter-value">{filters.largo_max || 6000} mm</span>
-        </label>
-        <input 
-          type="range" 
-          name="largo_max" 
-          min="3000" max="6000" step="50"
-          value={filters.largo_max || 6000} 
-          onChange={handleChange}
-          className="slider"
-        />
-      </div>
+      <SliderBlock label="Autonomía mínima" name="autonomia_min" min={0} max={1500} step={50} unit="km" defaultVal={0} />
 
-      <div>
-        <label>
-          <span>Maletero Mínimo:</span>
-          <span className="filter-value">{filters.maletero_min || 0} L</span>
-        </label>
-        <input 
-          type="range" 
-          name="maletero_min" 
-          min="0" max="1000" step="10"
-          value={filters.maletero_min || 0} 
-          onChange={handleChange}
-          className="slider"
-        />
-      </div>
+      <hr className="filter-divider" />
+
+      <SliderBlock label="Largo máximo"    name="largo_max"    min={3000} max={6000} step={50}  unit="mm" defaultVal={6000} />
+      <SliderBlock label="Maletero mínimo" name="maletero_min" min={0}    max={1000} step={10}  unit="L"  defaultVal={0} />
     </div>
   );
 };
