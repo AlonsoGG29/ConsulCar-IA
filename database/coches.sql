@@ -14,7 +14,7 @@ CREATE TABLE marcas (
 
 -- 2. Tabla Modelos
 CREATE TABLE modelos (
-    id_modelo SERIAL PRIMARY KEY,
+    id_modelo INTEGER PRIMARY KEY,
     id_marca INTEGER NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     -- Tipo y comercialización
