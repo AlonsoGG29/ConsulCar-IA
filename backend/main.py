@@ -153,7 +153,7 @@ def _cosine_similarity(first, second):
     return dot_product / (first_norm * second_norm) if first_norm and second_norm else 0
 
 def _get_relevant_cars(message, limit=6):
-    question_embedding = generar_embedding(message, task_type="retrieval_query")
+    question_embedding = generar_embedding(message)
     embeddings = supabase.table("modelos_embeddings").select("id_modelo, embedding").execute().data
     ranked_ids = sorted(
         (
@@ -188,30 +188,33 @@ def _car_context(cars):
 async def chat(request: ChatRequest):
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Escribe una pregunta para empezar.")
-    if not supabase or not GEMINI_API_KEY:
-        raise HTTPException(status_code=503, detail="El servicio de IA no está configurado.")
+    if not supabase:
+        raise HTTPException(status_code=503, detail="La base de datos de Supabase no está configurada.")
 
     try:
-        import google.generativeai as genai
+        # Obtiene los coches más parecidos vectorialmente usando SentenceTransformers + Cosine Similarity
+        relevant_cars = _get_relevant_cars(request.message, limit=3)
+        
+        if not relevant_cars:
+            return {
+                "answer": "No hemos encontrado ningún coche en el catálogo que coincida con tus criterios de búsqueda.",
+                "sources": []
+            }
 
-        relevant_cars = _get_relevant_cars(request.message)
-        context = _car_context(relevant_cars)
-        model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
-            system_instruction=(
-                "Eres el asistente de ConsultorCoches. Responde en español, de forma clara y breve. "
-                "Asesora solo usando el catálogo proporcionado; no inventes especificaciones. "
-                "Si faltan datos, dilo expresamente. No afirmes que puedes comprar o reservar coches."
-            ),
+        # Genera una respuesta formateada en texto claro directamente con Python
+        lista_coches_texto = "\n".join([
+            f"• {car.get('marcas', {}).get('nombre', '')} {car.get('nombre', '')}: "
+            f"{car.get('cv', '?')} CV, {car.get('combustible', 'N/D')}, "
+            f"Consumo: {car.get('consumo', '?')} L/100km, "
+            f"Maletero: {car.get('maletero_litros', '?')} L - {car.get('precio_base', '?')} €"
+            for car in relevant_cars
+        ])
+
+        answer = (
+            f"Según nuestro análisis de similitud vectorial, los coches que mejor se adaptan "
+            f"a tu búsqueda (\"{request.message}\") son:\n\n{lista_coches_texto}"
         )
-        conversation = [
-            {"role": "user", "parts": [f"Catálogo relevante:\n{context}\n\nPregunta: {request.message}"]}
-        ]
-        for item in request.history[-8:]:
-            if item.role in {"user", "model"} and item.content.strip():
-                conversation.insert(-1, {"role": item.role, "parts": [item.content]})
-        response = model.generate_content(conversation)
-        answer = response.text.strip()
+
         sources = [
             {
                 "id_modelo": car["id_modelo"],
@@ -219,10 +222,17 @@ async def chat(request: ChatRequest):
             }
             for car in relevant_cars
         ]
-        return {"answer": answer, "sources": sources}
+
+        # Retorna la respuesta con la estructura exacta que espera tu Frontend
+        return {
+            "answer": answer,
+            "sources": sources,
+            "cars": relevant_cars
+        }
+
     except Exception as error:
-        print(f"Error en el chat de IA: {error}")
-        raise HTTPException(status_code=502, detail="No se pudo obtener respuesta del asistente.") from error
+        print(f"Error en la búsqueda vectorial: {error}")
+        raise HTTPException(status_code=500, detail="Error al procesar la búsqueda vectorial.") from error
 
 # ==========================================
 # PUNTO DE ENTRADA
