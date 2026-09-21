@@ -1,19 +1,3 @@
--- ESTRUCTURA DE LA BASE DE DATOS:
--- CREATE TABLE Marcas (
---     id_marca SERIAL PRIMARY KEY,
---     nombre VARCHAR(100) NOT NULL UNIQUE,
---     nombre_grupo VARCHAR(100),               -- Ej: Grupo Volkswagen, Stellantis
---     pais_origen VARCHAR(50),
---     garantia_anios INTEGER,
---     fiab_actual NUMERIC(4, 2),
---     fiab_antigua NUMERIC(4, 2)
--- );
-
-
-
-
-
-
 --- INSERCIÓN DE DATOS
 INSERT INTO marcas (nombre, nombre_grupo, pais_origen, garantia_anios, fiab_actual, fiab_antigua) VALUES
 -- Japonesas
