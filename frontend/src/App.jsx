@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './index.css';
 import CarCard from './components/CarCard';
 import Filters from './components/Filters';
+import ChatAssistant from './components/ChatAssistant';
 
 function App() {
   const [cars, setCars]       = useState([]);
@@ -115,6 +116,7 @@ function App() {
           )}
         </section>
       </div>
+      <ChatAssistant />
     </div>
   );
 }

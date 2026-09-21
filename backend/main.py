@@ -1,16 +1,19 @@
 import os
+import ast
+import math
 import threading
 import time
 import webbrowser
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from supabase import create_client, Client
+from embeddings import generar_embedding
 
 # ==========================================
 # CONFIGURACIÓN DE SUPABASE
@@ -41,6 +44,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[ChatMessage] = Field(default_factory=list)
 
 # Servir carpeta templates estáticamente (si tuvieras más archivos)
 # app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -122,6 +135,94 @@ async def get_coches(
     
     response = query.execute()
     return response.data
+
+def _vector_as_list(value):
+    if isinstance(value, str):
+        try:
+            value = ast.literal_eval(value)
+        except (ValueError, SyntaxError):
+            return []
+    return value if isinstance(value, list) else []
+
+def _cosine_similarity(first, second):
+    if len(first) != len(second) or not first:
+        return 0
+    dot_product = sum(a * b for a, b in zip(first, second))
+    first_norm = math.sqrt(sum(value * value for value in first))
+    second_norm = math.sqrt(sum(value * value for value in second))
+    return dot_product / (first_norm * second_norm) if first_norm and second_norm else 0
+
+def _get_relevant_cars(message, limit=6):
+    question_embedding = generar_embedding(message, task_type="retrieval_query")
+    embeddings = supabase.table("modelos_embeddings").select("id_modelo, embedding").execute().data
+    ranked_ids = sorted(
+        (
+            (
+                _cosine_similarity(question_embedding, _vector_as_list(row.get("embedding"))),
+                row.get("id_modelo"),
+            )
+            for row in embeddings
+        ),
+        reverse=True,
+    )[:limit]
+    ids = [model_id for _, model_id in ranked_ids if model_id is not None]
+    if not ids:
+        return []
+
+    cars = supabase.table("modelos").select("*, marcas(nombre)").in_("id_modelo", ids).execute().data
+    cars_by_id = {car["id_modelo"]: car for car in cars}
+    return [cars_by_id[model_id] for model_id in ids if model_id in cars_by_id]
+
+def _car_context(cars):
+    return "\n".join(
+        f"- {car.get('marcas', {}).get('nombre', 'Marca desconocida')} {car.get('nombre', '')} "
+        f"({car.get('anio', 'sin año')}): {car.get('combustible', 'sin combustible')}, "
+        f"{car.get('cv', '?')} CV, {car.get('consumo', '?')} consumo, "
+        f"{car.get('autonomia_km', '?')} km de autonomía, "
+        f"{car.get('maletero_litros', '?')} L de maletero, "
+        f"{car.get('precio_base', '?')} euros."
+        for car in cars
+    )
+
+@app.post("/api/chat")
+async def chat(request: ChatRequest):
+    if not request.message.strip():
+        raise HTTPException(status_code=400, detail="Escribe una pregunta para empezar.")
+    if not supabase or not GEMINI_API_KEY:
+        raise HTTPException(status_code=503, detail="El servicio de IA no está configurado.")
+
+    try:
+        import google.generativeai as genai
+
+        relevant_cars = _get_relevant_cars(request.message)
+        context = _car_context(relevant_cars)
+        model = genai.GenerativeModel(
+            model_name="gemini-1.5-flash",
+            system_instruction=(
+                "Eres el asistente de ConsultorCoches. Responde en español, de forma clara y breve. "
+                "Asesora solo usando el catálogo proporcionado; no inventes especificaciones. "
+                "Si faltan datos, dilo expresamente. No afirmes que puedes comprar o reservar coches."
+            ),
+        )
+        conversation = [
+            {"role": "user", "parts": [f"Catálogo relevante:\n{context}\n\nPregunta: {request.message}"]}
+        ]
+        for item in request.history[-8:]:
+            if item.role in {"user", "model"} and item.content.strip():
+                conversation.insert(-1, {"role": item.role, "parts": [item.content]})
+        response = model.generate_content(conversation)
+        answer = response.text.strip()
+        sources = [
+            {
+                "id_modelo": car["id_modelo"],
+                "nombre": f"{car.get('marcas', {}).get('nombre', '')} {car.get('nombre', '')}".strip(),
+            }
+            for car in relevant_cars
+        ]
+        return {"answer": answer, "sources": sources}
+    except Exception as error:
+        print(f"Error en el chat de IA: {error}")
+        raise HTTPException(status_code=502, detail="No se pudo obtener respuesta del asistente.") from error
 
 # ==========================================
 # PUNTO DE ENTRADA
