@@ -1,4 +1,4 @@
-# CONSULTOR DE COCHES
+# CONSULTOR DE COCHES CON IA
 
 Una aplicación web moderna para buscar y comparar coches en base a múltiples criterios (potencia, consumo, dimensiones, maletero, etc.) e integración de IA para búsqueda semántica inteligente.
 
