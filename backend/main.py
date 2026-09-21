@@ -152,26 +152,25 @@ def _cosine_similarity(first, second):
     second_norm = math.sqrt(sum(value * value for value in second))
     return dot_product / (first_norm * second_norm) if first_norm and second_norm else 0
 
-def _get_relevant_cars(message, limit=6):
+def _get_relevant_cars(message, limit=3):
+    # Embedding de la pregunta del usuario
     question_embedding = generar_embedding(message)
-    embeddings = supabase.table("modelos_embeddings").select("id_modelo, embedding").execute().data
-    ranked_ids = sorted(
-        (
-            (
-                _cosine_similarity(question_embedding, _vector_as_list(row.get("embedding"))),
-                row.get("id_modelo"),
-            )
-            for row in embeddings
-        ),
-        reverse=True,
-    )[:limit]
-    ids = [model_id for _, model_id in ranked_ids if model_id is not None]
+    
+    # Supabase/pgvector hace la comparación y ordena en la BBDD
+    res = supabase.rpc("buscar_coches_similares", {
+        "query_embedding": question_embedding,
+        "match_threshold": 0.5,
+        "match_count": limit
+    }).execute()
+    
+    ids = [row["id_modelo"] for row in res.data] if res.data else []
     if not ids:
         return []
 
+    # Traen especificaciones completas de los coches ganadores
     cars = supabase.table("modelos").select("*, marcas(nombre)").in_("id_modelo", ids).execute().data
     cars_by_id = {car["id_modelo"]: car for car in cars}
-    return [cars_by_id[model_id] for model_id in ids if model_id in cars_by_id]
+    return [cars_by_id[m_id] for m_id in ids if m_id in cars_by_id]
 
 def _car_context(cars):
     return "\n".join(
