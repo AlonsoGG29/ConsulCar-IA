@@ -1,4 +1,4 @@
-# ⚡ CarConsultor IA — Búsqueda Vectorial & Comparador de Vehículos
+# ⚡ Consulcar IA — Búsqueda Vectorial & Comparador de Vehículos
 
 #### Una aplicación web moderna para buscar y comparar todos los coches en venta en España en base a tus propios gustos y criterios (potencia, consumo, marca, dimensiones, maletero, etc.) e integración de IA para búsqueda semántica inteligente.
 
