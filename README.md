@@ -1,8 +1,8 @@
 # ⚡ ConsulCar IA — Búsqueda Vectorial & Comparador de Vehículos
 
-#### Una aplicación web moderna para buscar y comparar todos los coches en venta en España en base a tus propios gustos y criterios (potencia, consumo, marca, dimensiones, maletero, etc.) e integración de IA para búsqueda semántica inteligente.
+![Vista de la página](https://live.staticflickr.com/65535/55547854206_77c651fa25_b.jpg)
 
-![Vista de la página](https://live.staticflickr.com/65535/55542732422_5a242ba0ba_b.jpg)
+#### Una aplicación web moderna para buscar y comparar todos los coches en venta en España en base a tus propios gustos y criterios (potencia, consumo, marca, dimensiones, maletero, etc.) e integración de IA para búsqueda semántica inteligente.
 
 ### *Plataforma Inteligente de Búsqueda y Comparativa de Automoción*
 
@@ -70,6 +70,8 @@ El proyecto está dividido en tres partes principales:
 ## 🚀 Guía de Uso de la Aplicación
 
 Una vez tengas ambos servidores (Frontend y Backend) corriendo simultáneamente, dirígete a `http://localhost:5173` en tu navegador para empezar a usar la aplicación.
+
+![Vista de la página](https://live.staticflickr.com/65535/55542732422_5a242ba0ba_b.jpg)
 
 ### 🎯 ¿Qué puedes hacer con el Consultor?
 
